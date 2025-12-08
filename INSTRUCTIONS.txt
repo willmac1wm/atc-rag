@@ -1,0 +1,76 @@
+===========================================
+ATC RAG DEPLOYMENT - INSTRUCTIONS
+===========================================
+
+STEP 1: Copy Your Training Files
+---------------------------------
+Copy your 166 training files into the "training_docs" folder
+
+STEP 2: Deploy to Railway
+--------------------------
+1. Go to https://railway.app
+2. Sign in with GitHub
+3. Click "New Project"
+4. Click "Deploy from local"
+5. Select this ATC_DEPLOY folder
+6. Wait for upload to complete
+
+STEP 3: Set Environment Variables
+----------------------------------
+In Railway dashboard:
+1. Click "Variables" tab
+2. Add these two:
+   
+   GEMINI_API_KEY = AIzaSyDgMdnhmipijxNUuFGECsz4vKqGfJmhNIE
+   DOCS_PATH = /app/training_docs
+
+3. Click Save (will redeploy)
+
+STEP 4: Get Your URL
+---------------------
+1. Click "Settings" tab
+2. Scroll to "Domains"
+3. Click "Generate Domain"
+4. Copy the URL (like: https://something.railway.app)
+
+STEP 5: Test It
+---------------
+Open in browser: https://your-url.railway.app/health
+
+Should show: {"status":"ok","docs_loaded":166}
+
+STEP 6: Connect to AI Studio
+-----------------------------
+1. Go to https://aistudio.google.com
+2. Click "Create new" → "Chat prompt"
+3. Click "Tools" → "+ Function"
+4. Paste this:
+
+{
+  "name": "search_atc_training",
+  "description": "Search FAA ATC training materials",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "question": {
+        "type": "string",
+        "description": "ATC question to search for"
+      }
+    },
+    "required": ["question"]
+  }
+}
+
+5. Set endpoint: https://your-url.railway.app/search
+6. Method: POST
+7. Save
+
+STEP 7: Test in AI Studio
+--------------------------
+Ask: "What are radar separation minimums?"
+
+You should get an answer citing your training materials!
+
+===========================================
+DONE! You now have AI-powered ATC training!
+===========================================
